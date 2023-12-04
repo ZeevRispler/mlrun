@@ -478,6 +478,7 @@ class MLFlowTracker(Tracker):
             "inputs": inputs,
             "outputs": outputs,
         }
+        print(kwargs)
         return context.log_model(**kwargs) if context else project.log_model(**kwargs)
 
     @staticmethod
