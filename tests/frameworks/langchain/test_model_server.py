@@ -22,7 +22,7 @@ import pytest
 
 import mlrun
 
-relative_asset_path = "mlrun/frameworks/langchain/model_server.py"
+relative_asset_path = "mlrun/frameworks/langchain/llm_model_server.py"
 langchain_model_server_path = str(
     pathlib.Path(__file__).absolute().parent.parent.parent.parent / relative_asset_path
 )
@@ -152,7 +152,6 @@ async def test_ollama_async(ollama_fixture):
     abatch_result = abatch_result[0]
     assert abatch_result
     print("ollama abatch successful abatch_result", abatch_result)
-
 
 def skip_openai():
     """

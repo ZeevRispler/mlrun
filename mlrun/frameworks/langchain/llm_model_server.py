@@ -69,7 +69,7 @@ class LangChainModelServer(V2ModelServer):
         super().__init__(name=name, context=context, model_path=model_path)
         self.llm = llm
         self.init_kwargs = init_kwargs or {}
-        self.generation_kwargs = generation_kwargs
+        self.generation_kwargs = generation_kwargs or {}
 
     def load(self):
         """
@@ -93,8 +93,10 @@ class LangChainModelServer(V2ModelServer):
         :return:                  The model's prediction on the given input.
         """
         inputs = request.get("inputs", [])
+        config = request.get("config", None)
+        stop = request.get("stop", None)
         generation_kwargs = generation_kwargs or self.generation_kwargs
-        return self.model.invoke(input=inputs[0], config=generation_kwargs)
+        return self.model.invoke(input=inputs[0], config=config, stop=stop, **generation_kwargs)
 
     def op_invoke(
         self, request: Dict[str, Any], generation_kwargs: Dict[str, Any] = None
@@ -108,8 +110,10 @@ class LangChainModelServer(V2ModelServer):
         """
         request = request.body
         inputs = request.get("inputs", [])
+        config = request.get("config", None)
+        stop = request.get("stop", None)
         generation_kwargs = generation_kwargs or self.generation_kwargs
-        return self.model.invoke(input=inputs[0], config=generation_kwargs)
+        return self.model.invoke(input=inputs[0], config=config, stop=stop, **generation_kwargs)
 
     def op_batch(
         self, request: Dict[str, Any], generation_kwargs: Dict[str, Any] = None
@@ -123,8 +127,10 @@ class LangChainModelServer(V2ModelServer):
         """
         request = request.body
         inputs = request.get("inputs", [])
+        config = request.get("config", None)
+        return_exceptions = request.get("return_exceptions", None)
         generation_kwargs = generation_kwargs or self.generation_kwargs
-        return self.model.batch(inputs=inputs, config=generation_kwargs)
+        return self.model.batch(inputs=inputs, config=config, return_exceptions=return_exceptions, **generation_kwargs)
 
     def op_ainvoke(
         self, request: Dict[str, Any], generation_kwargs: Dict[str, Any] = None
@@ -138,8 +144,10 @@ class LangChainModelServer(V2ModelServer):
         """
         request = request.body
         inputs = request.get("inputs", [])
+        config = request.get("config", None)
+        stop = request.get("stop", None)
         generation_kwargs = generation_kwargs or self.generation_kwargs
-        response = self.model.ainvoke(input=inputs, config=generation_kwargs)
+        response = self.model.ainvoke(input=inputs, config=config, stop=stop, **generation_kwargs)
         return response
 
     def op_abatch(
@@ -154,6 +162,8 @@ class LangChainModelServer(V2ModelServer):
         """
         request = request.body
         inputs = request.get("inputs", [])
+        config = request.get("config", None)
+        return_exceptions = request.get("return_exceptions", None)
         generation_kwargs = generation_kwargs or self.generation_kwargs
-        response = self.model.abatch(inputs=inputs, config=generation_kwargs)
+        response = self.model.abatch(inputs=inputs, config=config, return_exceptions=return_exceptions, **generation_kwargs)
         return response
